@@ -9,4 +9,4 @@ test:
 	uv run pytest -q
 
 run:
-	uv run src/rpg.py
+	uv run src/DuskHollow.py
