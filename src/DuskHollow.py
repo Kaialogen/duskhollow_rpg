@@ -1,12 +1,41 @@
 import os
 
 
+def story_prompt() -> str:
+    """
+    Display the opening story prompt for the game.
+
+    Introduces the player character and sets the scene.
+    """
+    intro_text: str = (
+        "You jolt awake to the creak of wood and the soft clatter of hooves.\n\n"
+        "Your horse-drawn carriage slows as it rolls into the sleepy town of "
+        "Dusk Hollow, its lanterns flickering weakly against the encroaching dusk.\n\n"
+        "Your name is Kael. A monster hunter of local renown. Steel and silver "
+        "have earned you coin before, but this job is different.\n\n"
+        "A single, unsigned letter summoned you here. Its message was brief, "
+        "its warning unmistakable:\n\n"
+        "“The old threat has returned.”\n"
+    )
+
+    return intro_text
+
+
+def clear_terminal() -> None:
+    """
+    Clears the terminal of any text
+
+    Designed for both Window and Unix systems
+    """
+    os.system('cls' if os.name == 'NT' else "clear")
+
+
 def showInstructions() -> None:
     """
     Prints a main menu and the commands
     """
     print("""
-    RPG Game
+    Dusk Hollow Commands
     ========
     Commands:
       go [direction]
@@ -41,6 +70,7 @@ def main() -> None:
         "Kitchen": {"north": "Hall", "item": "Bread", "monster": "Skeleton"},
     }
 
+    print(story_prompt())
     showInstructions()
 
     while True:
@@ -48,7 +78,7 @@ def main() -> None:
         move: str = input(">")
         move: list[str] = move.split(" ", 1)
 
-        os.system("clear")
+        clear_terminal()
 
         if move[0] == "get":
             if move[1] == rooms[currentRoom]["item"]:
