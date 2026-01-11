@@ -1,4 +1,7 @@
 import os
+from Player import Player
+from Monster import Monster
+from Weeapon import wooden_club, crossbow
 
 
 def story_prompt() -> str:
@@ -44,10 +47,11 @@ def showInstructions() -> None:
     """)
 
 
-def status(currentRoom: str, inventory: list[str], rooms) -> None:
+def status(currentRoom: str, inventory: list[str], rooms, player) -> None:
     print("------------------")
-    print(f"Current Room: {currentRoom}")
+    player.health_bar.draw()
     print(f"Inventory: {inventory}")
+    print(f"Current Room: {currentRoom}")
 
     if "item" in rooms[currentRoom] and rooms[currentRoom]["item"]:
         room_item: str = rooms[currentRoom]["item"]
@@ -63,12 +67,14 @@ def status(currentRoom: str, inventory: list[str], rooms) -> None:
 def main() -> None:
     inventory: list[str] = []
     currentRoom: str = "Hall"
+    player = Player()
+    skeleton = Monster(name="Skeleton", health=30, damage=10, weapon=wooden_club)
 
     rooms = {
-        "Garden": {"north": "Dining Room", "item": "Golden sword"},
+        "Garden": {"north": "Dining Room", "item": crossbow.name},
         "Dining Room": {"south": "Garden", "west": "Hall", "item": "potion"},
         "Hall": {"south": "Kitchen", "east": "Dining Room", "item": "key"},
-        "Kitchen": {"north": "Hall", "item": "Bread", "monster": "Skeleton"},
+        "Kitchen": {"north": "Hall", "item": "Bread", "monster": skeleton},
     }
 
     print(story_prompt())
@@ -76,8 +82,8 @@ def main() -> None:
 
     # Gameplay Loop
     while True:
-        status(currentRoom, inventory, rooms)
-        move: list[str] = input(">").lower().split(" ", 1)
+        status(currentRoom, inventory, rooms, player)
+        move: list[str] = input(">").split(" ", 1)
 
         clear_terminal()
 
@@ -85,6 +91,8 @@ def main() -> None:
             if move[1] == rooms[currentRoom]["item"]:
                 print(f"You got {move[1]}")
                 inventory.append(move[1])
+                if rooms[currentRoom]["item"] == "Crossbow":
+                    player.equip(crossbow)
                 rooms[currentRoom]["item"] = ""
             else:
                 print(f"You don't see any {move[1]} here")
@@ -99,26 +107,23 @@ def main() -> None:
             print("Invalid Command")
 
         # Win Condition 1: Escape through the garden
-        if (
-            "key" in inventory
-            and "potion" in inventory
-            and currentRoom == "Garden"
-        ):
-            print("You Win")
+        if "key" in inventory and "potion" in inventory and currentRoom == "Garden":
+            print("You have escaped through the garden. You Win")
             break
 
         # Loss Condition: Defeated by the monsters
         if "monster" in rooms[currentRoom]:
-            if "Golden sword" in inventory:
-                print(f"You defeated the {rooms[currentRoom]['monster']}")
-                print("You Win")
-                break
-            else:
-                print(
-                    f"You have been slain by the {rooms[currentRoom]['monster']}"
-                )
-                print("Game Over")
-                break
+            while True:
+                player.melee_attack(skeleton)
+                skeleton.attack(player)
+                player.health_bar.draw()
+                skeleton.health_bar.draw()
+                input()
+                if skeleton.health == 0:
+                    break
+            print(f"You defeated the {rooms[currentRoom]['monster']}")
+            print("You Win")
+            break
 
 
 if __name__ == "__main__":

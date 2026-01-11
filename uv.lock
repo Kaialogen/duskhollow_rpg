@@ -16,23 +16,23 @@ name = "duskhollow-rpg"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
-    { name = "mypy" },
     { name = "pytest" },
 ]
 
 [package.dev-dependencies]
 dev = [
+    { name = "mypy" },
     { name = "ruff" },
 ]
 
 [package.metadata]
-requires-dist = [
-    { name = "mypy", specifier = ">=1.19.1" },
-    { name = "pytest", specifier = ">=9.0.2" },
-]
+requires-dist = [{ name = "pytest", specifier = ">=9.0.2" }]
 
 [package.metadata.requires-dev]
-dev = [{ name = "ruff", specifier = ">=0.14.11" }]
+dev = [
+    { name = "mypy", specifier = ">=1.19.1" },
+    { name = "ruff", specifier = ">=0.14.11" },
+]
 
 [[package]]
 name = "iniconfig"
