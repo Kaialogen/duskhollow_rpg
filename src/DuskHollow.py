@@ -1,16 +1,16 @@
-import os
+import os, sys, time
 from Player import Player
 from Monster import Monster
 from Weeapon import wooden_club, crossbow
 
 
-def story_prompt() -> str:
+def story_prompt():
     """
     Display the opening story prompt for the game.
 
     Introduces the player character and sets the scene.
     """
-    intro_text: str = (
+    intro_text = [
         "You jolt awake to the creak of wood and the soft clatter of hooves.\n\n"
         "Your horse-drawn carriage slows as it rolls into the sleepy town of "
         "Dusk Hollow, its lanterns flickering weakly against the encroaching dusk.\n\n"
@@ -19,9 +19,17 @@ def story_prompt() -> str:
         "A single, unsigned letter summoned you here. Its message was brief, "
         "its warning unmistakable:\n\n"
         "“The old threat has returned.”\n"
-    )
+    ]
 
     return intro_text
+
+def typewriter_sliced(text_list, delay) -> None:
+    for row in text_list:
+        for char in row:
+            sys.stdout.write(char)
+            sys.stdout.flush()
+            time.sleep(delay)
+        print()
 
 
 def clear_terminal() -> None:
@@ -77,7 +85,7 @@ def main() -> None:
         "Kitchen": {"north": "Hall", "item": "Bread", "monster": skeleton},
     }
 
-    print(story_prompt())
+    typewriter_sliced(story_prompt(), 0.05)
     showInstructions()
 
     # Gameplay Loop
@@ -106,12 +114,10 @@ def main() -> None:
         else:
             print("Invalid Command")
 
-        # Win Condition 1: Escape through the garden
         if "key" in inventory and "potion" in inventory and currentRoom == "Garden":
             print("You have escaped through the garden. You Win")
             break
 
-        # Loss Condition: Defeated by the monsters
         if "monster" in rooms[currentRoom]:
             while True:
                 player.melee_attack(skeleton)
