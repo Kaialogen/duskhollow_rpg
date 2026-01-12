@@ -105,25 +105,20 @@ def combat(rooms, player: Player, current_room: str) -> None:
                 defender = player
 
             # Attack Roll
-            attack_roll = dice.rollD20() + attacker.strength_modifier
+            attack_roll, is_crit = attacker.roll_attack(dice)
             print(
                 f"{attacker.name} attacks! "
                 f"(Roll: {attack_roll} vs AC {defender.armour_class})"
             )
 
-            if attack_roll >= defender.armour_class:
-                damage = max(
-                    1,
-                    attacker.weapon.damage + attacker.strength_modifier
-                )
-                defender.health -= damage
-                defender.health = max(defender.health, 0)
+            if attack_roll >= defender.armour_class or is_crit:
+                damage = attacker.roll_damage(dice, critical=is_crit)
+                defender.take_damage(damage)
 
-                defender.health_bar.update()
-                
-                print(
-                    f"Hit! {attacker.name} deals {damage} damage."
-                )
+                if is_crit:
+                    print(f"CRITICAL HIT! {attacker.name} deals {damage} damage!")
+                else:
+                    print(f"{attacker.name} hits for {damage} damage!")
             else:
                 print(f"{attacker.name} misses!")
 

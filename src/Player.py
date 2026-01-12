@@ -1,26 +1,31 @@
-from math import floor
 from Weeapon import iron_sword
-from Health_Bar import HealthBar
+from Combatant import Combatant
 
 
-class Player:
-    def __init__(self, dexterity: int, strength: int, armour_class:int,  name: str = "Kael",  health: int = 50) -> None:
-        self.name = name
-        self.health = health
-        self.max_health = health
+class Player(Combatant):
+    def __init__(
+        self,
+        dexterity: int,
+        strength: int,
+        armour_class: int,
+        name: str = "Kael",
+        health: int = 50,
+    ) -> None:
+        super().__init__(
+            name=name,
+            health=health,
+            armour_class=armour_class,
+            dexterity=dexterity,
+            strength=strength,
+            weapon=iron_sword,
+            health_bar_colour="green",
+        )
+
         self.default_weapon = iron_sword
-        self.dexterity = dexterity
-        self.strength = strength
-        self.armour_class = armour_class
-        self.weapon = self.default_weapon
-        self.health_bar = HealthBar(self, colour="green")
-
-        self.dexterity_modifier = floor((self.dexterity - 10) / 2)
-        self.strength_modifier = floor((self.strength - 10) / 2)
 
     def equip(self, weapon) -> None:
         self.weapon = weapon
-        print(f"{self.name} equipped a {self.weapon.name}")
+        print(f"{self.name} equipped a {weapon.name}")
 
     def drop(self) -> None:
         print(f"{self.name} dropped {self.weapon.name}")
