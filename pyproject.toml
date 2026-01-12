@@ -1,7 +1,6 @@
 [project]
-name = "Duskhollow-RPG"
+name = "duskhollow_rpg"
 version = "0.1.0"
-description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = []
@@ -14,8 +13,10 @@ dev = [
     "ruff>=0.14.11",
 ]
 
-[tool.pytest.ini_options]
-pythonpath = ["."]
+[tool.mypy]
+python_version = "3.12"
+strict = true
+packages = ["game"]
 
 [tool.ruff]
 line-length = 100

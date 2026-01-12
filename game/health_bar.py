@@ -38,9 +38,7 @@ class HealthBar:
     def draw(self) -> None:
         remaining_bars = round(self.current_value / self.max_value * self.length)
         lost_bars = self.length - remaining_bars
-        print(
-            f"{self.entity.name}'s HEALTH: {self.entity.health} / {self.entity.max_health}"
-        )
+        print(f"{self.entity.name}'s HEALTH: {self.entity.health} / {self.entity.max_health}")
         print(
             f"{self.barrier}"
             f"{self.colour if self.is_coloured else ''}"

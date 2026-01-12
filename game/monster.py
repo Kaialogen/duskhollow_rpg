@@ -23,9 +23,7 @@ class Monster(Combatant):
         )
 
 
-rat = Monster(
-    name="Rat", health=7, armour_class=12, dexterity=15, strength=7, weapon=Bite
-)
+rat = Monster(name="Rat", health=7, armour_class=12, dexterity=15, strength=7, weapon=Bite)
 skeleton = Monster(
     name="Skeleton",
     health=13,
@@ -42,6 +40,4 @@ slime = Monster(
     strength=14,
     weapon=Pseudopod,
 )
-wolf = Monster(
-    name="Wolf", health=11, armour_class=13, dexterity=15, strength=14, weapon=Bite
-)
+wolf = Monster(name="Wolf", health=11, armour_class=13, dexterity=15, strength=14, weapon=Bite)

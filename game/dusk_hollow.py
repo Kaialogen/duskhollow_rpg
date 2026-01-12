@@ -110,10 +110,7 @@ def combat(rooms, player: Player, current_room: str) -> None:
 
             # Attack Roll
             attack_roll, is_crit = attacker.roll_attack(dice)
-            print(
-                f"{attacker.name} attacks! "
-                f"(Roll: {attack_roll} vs AC {defender.armour_class})"
-            )
+            print(f"{attacker.name} attacks! (Roll: {attack_roll} vs AC {defender.armour_class})")
 
             if attack_roll >= defender.armour_class or is_crit:
                 damage = attacker.roll_damage(dice, critical=is_crit)

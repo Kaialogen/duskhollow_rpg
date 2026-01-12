@@ -8,13 +8,9 @@ class Weapon:
         self.value = value
 
 
-iron_sword = Weapon(
-    name="Iron Sword", weapon_type="slashing", damage_dice=(1, 8), value=10
-)
+iron_sword = Weapon(name="Iron Sword", weapon_type="slashing", damage_dice=(1, 8), value=10)
 
-Shortsword = Weapon(
-    name="Shortsword", weapon_type="piercing", damage_dice=(1, 6), value=5
-)
+Shortsword = Weapon(name="Shortsword", weapon_type="piercing", damage_dice=(1, 6), value=5)
 
 crossbow = Weapon(name="Crossbow", weapon_type="piercing", damage_dice=(1, 8), value=25)
 
