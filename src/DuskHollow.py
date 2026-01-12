@@ -74,14 +74,15 @@ def status(current_room: str, inventory: list[str], rooms, player) -> None:
 
 def combat(rooms, player: Player, current_room: str) -> None:
     """
-    Handle turn-based combat between the player and a monster.
-    The combatant with the higher initiative always acts first.
+    Handle D&D 5e-style turn-based combat between the player and a monster.
+    Initiative determines turn order. Attacks use attack rolls vs armour class.
     """
     dice = DiceRoll()
     monster = rooms[current_room]["monster"]
 
-    player_initiative = player.dexterity_modifier + dice.rollD20()
-    monster_initiative = monster.dexterity_modifier + dice.rollD20()
+    # Roll initiative
+    player_initiative = dice.rollD20() + player.dexterity_modifier
+    monster_initiative = dice.rollD20() + monster.dexterity_modifier
 
     print(f"{player.name} initiative: {player_initiative}")
     print(f"{monster.name} initiative: {monster_initiative}")
@@ -97,30 +98,55 @@ def combat(rooms, player: Player, current_room: str) -> None:
     while True:
         for actor in turn_order:
             if actor == "player":
-                player.melee_attack(monster)
+                attacker = player
+                defender = monster
             else:
-                monster.attack(player)
+                attacker = monster
+                defender = player
 
-            player.health_bar.draw()
-            monster.health_bar.draw()
+            # Attack Roll
+            attack_roll = dice.rollD20() + attacker.strength_modifier
+            print(
+                f"{attacker.name} attacks! "
+                f"(Roll: {attack_roll} vs AC {defender.armour_class})"
+            )
+
+            if attack_roll >= defender.armour_class:
+                damage = max(
+                    1,
+                    attacker.weapon.damage + attacker.strength_modifier
+                )
+                defender.health -= damage
+                defender.health = max(defender.health, 0)
+
+                defender.health_bar.update()
+                
+                print(
+                    f"Hit! {attacker.name} deals {damage} damage."
+                )
+            else:
+                print(f"{attacker.name} misses!")
+
+            attacker.health_bar.draw()
+            defender.health_bar.draw()
             input()
 
-            # Check win/loss conditions immediately after each action
-            if player.health <= 0:
-                print(f"You have been slain by the {monster.name}.")
-                print("Game over.")
-                sys.exit()
-
-            if monster.health <= 0:
-                print(f"You have slain the {monster.name}.")
-                rooms[current_room]["monster"] = ""
-                return
+            # Death checks
+            if defender.health <= 0:
+                if defender is player:
+                    print(f"You have been slain by the {monster.name}.")
+                    print("Game over.")
+                    sys.exit()
+                else:
+                    print(f"You have slain the {monster.name}!")
+                    del rooms[current_room]["monster"]
+                    return
 
 
 def main() -> None:
     inventory: list[str] = []
     current_room: str = "Hall"
-    player = Player(dexterity=14)
+    player = Player(dexterity=14, strength=14, armour_class=12)
     running = True
 
     rooms = {
