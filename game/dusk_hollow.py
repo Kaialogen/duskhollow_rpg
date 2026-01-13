@@ -2,7 +2,7 @@ import os
 import sys
 import time
 from .player import Player
-from .monster import skeleton, rat, wolf, Monster
+from .monster import skeleton, rat, wolf
 from .weapon import crossbow
 from .dice_roll import DiceRoll
 

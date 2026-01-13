@@ -6,7 +6,7 @@ lint-ruff:
 	uv run ruff check .
 
 lint-mypy:
-	uv run --no-project mypy game
+	uv run mypy game
 
 format:
 	uv run ruff format .
